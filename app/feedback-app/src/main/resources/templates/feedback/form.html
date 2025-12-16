@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" lang="en">
+<body>
+
+<section layout:fragment="content">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Send Us Your Feedback</h3>
+        </div>
+        <div class="card-body">
+          <!-- Feedback form -->
+          <form th:action="@{/feedback}" th:object="${feedback}" method="post">
+            <div class="mb-3">
+              <label class="form-label">Name (optional)</label>
+              <input th:field="*{name}" class="form-control" placeholder="Your name" maxlength="100"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Email (optional)</label>
+              <input type="email" th:field="*{email}" class="form-control" placeholder="your@email.com" maxlength="100"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Contact type *</label>
+              <select th:field="*{contactType}" class="form-select" required>
+                <option th:each="c : ${contactTypes}" th:value="${c}" th:text="${c}"></option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Message *</label>
+              <textarea th:field="*{message}" class="form-control" rows="6" placeholder="Your message here..." maxlength="1000" required></textarea>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Send Feedback</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

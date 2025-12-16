@@ -1,0 +1,39 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/feedback
+    username: ${DB_USERNAME:feedback_app}
+    password: ${DB_PASSWORD:strong_password_here}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    clean-disabled: true
+    locations: classpath:db/migration
+
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: your-smtp-user
+    password: your-smtp-password
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+logging:
+  level:
+    root: INFO
+
+custom:
+  mail:
+    from: no-reply@yourdomain.com
+
+app:
+  user:
+    password: ${ADMIN_INITIAL_PASSWORD:admin}
+    email: ${ADMIN_INITIAL_EMAIL:admin@feedback.com}

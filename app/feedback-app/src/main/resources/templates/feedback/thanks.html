@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="en">
+
+<section layout:fragment="content">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <span class="display-4 text-success">✓</span>
+                        </div>
+                        <h1 class="h3 mb-3">Thank you for your feedback</h1>
+                        <p class="lead mb-4">
+                            Your message has been successfully submitted.
+                        </p>
+                        <p class="text-muted mb-4">
+                            We appreciate you taking the time to share your feedback.
+                            All submissions are carefully reviewed and help us improve
+                            our services.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a th:href="@{/}" class="btn btn-primary">
+                                Back to Home
+                            </a>
+                            <a th:href="@{/feedback}" class="btn btn-outline-secondary">
+                                Submit another feedback
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

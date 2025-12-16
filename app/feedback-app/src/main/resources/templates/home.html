@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+      lang="en">
+
+<section layout:fragment="content">
+    <div class="container-fluid p-0">
+
+        <!-- Hero Section -->
+        <section class="bg-primary text-white text-center py-5">
+            <div class="container">
+                <h1 class="display-4 fw-bold">Welcome to the Feedback App</h1>
+                <p class="lead mb-4">Submit your feedback and help us improve our services.</p>
+
+                <div class="d-flex justify-content-center flex-wrap gap-2">
+                    <div sec:authorize="isAnonymous() or hasAuthority('FEEDBACK_CREATE')">
+                        <a class="btn btn-light btn-lg me-2" th:href="@{/feedback}" role="button">Send Feedback</a>
+                    </div>
+
+                    <div sec:authorize="hasAuthority('FEEDBACK_READ_ALL')">
+                        <a class="btn btn-light btn-lg me-2" th:href="@{/feedback/list}" role="button">All Feedbacks</a>
+                    </div>
+
+                    <div sec:authorize="hasAuthority('FEEDBACK_READ') and !hasAuthority('FEEDBACK_READ_ALL')">
+                        <a class="btn btn-light btn-lg me-2" th:href="@{/feedback/list}" role="button">My Feedbacks</a>
+                    </div>
+
+                    <div sec:authorize="hasAuthority('USER_UPDATE_ALL')">
+                        <a class="btn btn-light btn-lg me-2" th:href="@{/user/list}" role="button">Manage users</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section class="bg-light py-5" sec:authorize="hasAuthority('DASHBOARD_VIEW')">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2>Admin Dashboard</h2>
+                    <p class="lead">Overview of feedback submissions and performance metrics</p>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+
+                    <!-- Total Feedbacks -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-chat-dots display-4 mb-2 text-dark"></i>
+                                <h5>Total Feedbacks</h5>
+                                <p class="display-6 fw-bold" th:text="${totalFeedbacks}">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedbacks This Month -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-event display-4 mb-2 text-secondary"></i>
+                                <h5>New This Month</h5>
+                                <p class="display-6 fw-bold" th:text="${monthlyFeedbacks}">0</p>
+                                <small class="text-muted" th:text="${monthlyFeedbacksChange}">+0%</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Open Feedbacks -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-exclamation-circle display-4 mb-2 text-warning"></i>
+                                <h5>Open Feedbacks</h5>
+                                <p class="display-6 fw-bold" th:text="${openFeedbacks}">0</p>
+                                <small class="text-muted">Unresolved</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Closed Feedbacks This Month -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-check-circle display-4 mb-2 text-success"></i>
+                                <h5>Closed This Month</h5>
+                                <p class="display-6 fw-bold" th:text="${closedFeedbacks}">0</p>
+                                <small class="text-muted" th:text="${closedFeedbacksChange}">+0%</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Percentage Closed -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-pie-chart display-4 mb-2 text-dark"></i>
+                                <h5>% Closed</h5>
+                                <p class="display-6 fw-bold" th:text="${percentageClosed}">0%</p>
+                                <small class="text-muted">Of total feedbacks</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Average Resolution Time -->
+                    <div class="col-md-3">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-clock display-4 mb-2 text-dark"></i>
+                                <h5>Avg. Resolution Time</h5>
+                                <p class="display-6 fw-bold" th:text="${avgResolutionTime}">0d</p>
+                                <small class="text-muted">Days</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Categories -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5>Top Categories</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item" th:each="cat : ${topCategories}"
+                                        th:text="${cat.name + ': ' + cat.count}">Category: 0</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-light py-5" sec:authorize="hasAuthority('FEEDBACK_CREATE') or isAnonymous()">
+            <div class="container text-center">
+                <h2>Why Your Feedback Matters</h2>
+                <p class="lead mb-4">Your opinions help us improve our services and better serve your needs. Each message is read and considered carefully.</p>
+            </div>
+        </section>
+
+        <section class="text-center py-5" sec:authorize="hasAuthority('FEEDBACK_CREATE') or isAnonymous()">
+            <div>
+                <a class="btn btn-primary btn-lg me-2" th:href="@{/feedback}" role="button">Send Feedback</a>
+            </div>
+        </section>
+    </div>
+</section>
+</html>

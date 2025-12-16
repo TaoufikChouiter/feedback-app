@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" lang="en">
+<body>
+
+<section layout:fragment="content">
+    <div class="container py-3">
+
+        <!-- Back button -->
+        <div class="mb-3">
+            <a th:href="@{/feedback/list}" class="btn btn-outline-secondary">
+                ← Back to list
+            </a>
+        </div>
+
+        <div class="row align-items-stretch">
+            <!-- Left panel: read-only feedback -->
+            <div class="col-md-7 d-flex">
+                <div class="card shadow-sm mb-3 w-100 d-flex flex-column h-100">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">User Feedback</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <p><strong>Name:</strong>
+                            <span th:text="${feedback.name ?: '—'}">Name</span>
+                        </p>
+                        <p><strong>Email:</strong>
+                            <span th:text="${feedback.email ?: '—'}">Email</span>
+                        </p>
+                        <p><strong>Contact Type:</strong>
+                            <span th:text="${feedback.contactType}">Type</span>
+                        </p>
+                        <p><strong>Message:</strong></p>
+                        <div class="border rounded p-3 bg-light">
+                            <p class="mb-0" th:text="${feedback.message}">Message content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right panel: editable admin fields -->
+            <div class="col-md-5 d-flex">
+                <div class="card shadow-sm mb-3 w-100 d-flex flex-column h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Manage Feedback</h5>
+                    </div>
+                    <div class="card-body flex-grow-1">
+                        <form th:action="@{/feedback/{id}/update(id=${feedback.id})}"
+                              th:object="${feedback}"
+                              method="post">
+
+                            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <select th:field="*{status}" class="form-select" required>
+                                    <option th:each="s : ${statusOptions}"
+                                            th:value="${s}"
+                                            th:text="${s}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Priority</label>
+                                <select th:field="*{priority}" class="form-select">
+                                    <option th:each="p : ${priorityOptions}"
+                                            th:value="${p}"
+                                            th:text="${p}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Assigned To</label>
+                                <select th:field="*{assignedTo}" class="form-select">
+                                    <option value="">Anyone</option>
+                                    <option th:each="u : ${assignableUsers}"
+                                            th:value="${u.id}"
+                                            th:text="${u.username}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea th:field="*{note}"
+                                          class="form-control"
+                                          rows="4"
+                                          placeholder="Add notes here...">
+                                </textarea>
+                            </div>
+
+                            <div class="mt-auto">
+                                <button type="submit" class="btn btn-success w-100">
+                                    Update Feedback
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

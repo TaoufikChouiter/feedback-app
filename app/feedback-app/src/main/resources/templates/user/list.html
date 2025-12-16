@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}" lang="en">
+
+<section layout:fragment="content">
+    <div class="card shadow-sm">
+
+        <!-- Header -->
+        <div class="card-header bg-light fw-semibold
+                    d-flex align-items-center justify-content-between">
+
+            <div>
+                <i class="bi bi-people me-2"></i>
+                Manage Users
+            </div>
+
+            <a class="btn btn-sm btn-primary"
+               th:href="@{/user}"
+               sec:authorize="hasAuthority('USER_UPDATE_ALL')">
+                <i class="bi bi-plus-lg me-1"></i>
+                Create user
+            </a>
+        </div>
+
+        <!-- Table -->
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Enabled</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}"></td>
+                    <td th:text="${u.username}"></td>
+                    <td th:text="${u.email}"></td>
+                    <td th:text="${u.role}"></td>
+                    <td th:text="${u.enabled}"></td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{/user/{id}(id=${u.id})}">
+                            <i class="bi bi-pencil"></i>
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="4" class="text-center text-muted py-4">
+                        No users found
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+</html>
