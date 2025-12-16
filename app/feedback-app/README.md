@@ -1,6 +1,18 @@
 # Feedback Application
 
-This is a simple feedback management system built with Spring Boot, JPA, PostgreSQL, and Flyway for database migrations. It provides REST APIs to manage users, feedback entries, and permissions.
+This is a simple feedback management system built with Spring Boot, JPA, PostgreSQL, and Flyway for database migrations. It uses classic Spring MVC controllers with Thymeleaf templates to manage users, feedback entries, and permissions via a web interface.
+
+## Getting Started
+
+### Clone the Repository
+
+```bash
+# Clone the repository
+git clone https://github.com/https://github.com/TaoufikChouiter/feedback-app.git
+
+# Enter the project directory
+cd feedback-app
+```
 
 ## Quick Start
 
@@ -85,8 +97,8 @@ or with the Maven wrapper:
 * Admin user can manage feedback and users.
 * Default dev credentials:
 
-    * Email: `admin@feedback.com`
-    * Password: `admin`
+  * Email: `admin@feedback.com`
+  * Password: `admin`
 
 ## Notes
 
