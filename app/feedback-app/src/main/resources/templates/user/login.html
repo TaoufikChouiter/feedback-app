@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}" lang="en">
+<head>
+    <title>Admin Login - Feedback App</title>
+</head>
+<body>
+
+<section layout:fragment="content" class="container py-5">
+    <h2 class="mb-4">Admin Login</h2>
+
+    <form th:action="@{/user/login}" method="post" class="w-50 mx-auto">
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" name="username" id="username" required/>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" required/>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <div th:if="${param.error}" class="alert alert-danger mt-3 text-center">
+        Invalid username or password!
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-success mt-3 text-center">
+        You have been logged out successfully.
+    </div>
+</section>
+
+</body>
+</html>

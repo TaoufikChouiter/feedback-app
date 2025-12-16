@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+      lang="en">
+
+<section layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <!-- Back -->
+            <div class="mb-3">
+                <a th:href="@{/user/list}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to users
+                </a>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-gear me-2"></i>
+                        <span th:text="${editMode} ? 'Edit User' : 'Create User'"></span>
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="${editMode}
+                            ? @{/user/{id}/update(id=${user.id})}
+                            : @{/user}"
+                          th:object="${user}"
+                          method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input th:field="*{username}"
+                                   class="form-control"
+                                   th:readonly="${editMode}"
+                                   th:disabled="${editMode}"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email"
+                                   th:field="*{email}"
+                                   class="form-control"
+                                   maxlength="100"
+                                   required/>
+                        </div>
+
+                        <!-- Roles -->
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select th:field="*{role}"
+                                    class="form-select"
+                                    sec:authorize="hasAuthority('USER_UPDATE_ALL')">
+                                <option th:each="r : ${roles}"
+                                        th:value="${r}"
+                                        th:text="${r}">
+                                </option>
+                            </select>
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:value="*{role}"
+                                   sec:authorize="!hasAuthority('USER_UPDATE_ALL')"
+                                   disabled>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   th:field="*{enabled}">
+                            <label class="form-check-label">
+                                Account enabled
+                            </label>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a th:href="@{/user/list}" class="btn btn-outline-secondary" sec:authorize="hasAuthority('USER_UPDATE_ALL')">
+                                Cancel
+                            </a>
+                            <a th:href="@{/}" class="btn btn-outline-secondary" sec:authorize="!hasAuthority('USER_UPDATE_ALL')">
+                                Cancel
+                            </a>
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save me-1"></i>
+                                <span th:text="${editMode} ? 'Save changes' : 'Create user'"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</html>

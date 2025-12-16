@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}" lang="en">
+<section layout:fragment="content">
+  <div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Feedback List</h2>
+
+      <a th:href="@{/feedback}"
+         class="btn btn-primary"
+         sec:authorize="hasAuthority('FEEDBACK_CREATE')">
+        <i class="bi bi-plus-lg me-1"></i>
+        New Feedback
+      </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white fw-semibold">
+        <i class="bi bi-funnel me-1"></i> Filters
+      </div>
+
+      <div class="card-body">
+        <form method="get">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+              <label class="form-label small text-muted">Contact Type</label>
+              <select name="contactType" class="form-select">
+                <option value="">All</option>
+                <option th:each="t : ${contactTypes}"
+                        th:value="${t}"
+                        th:text="${t}"
+                        th:selected="${t == criteria.contactType}">
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-2">
+              <label class="form-label small text-muted">Status</label>
+              <select name="status" class="form-select">
+                <option value="">All</option>
+                <option th:each="s : ${statuses}"
+                        th:value="${s}"
+                        th:text="${s}"
+                        th:selected="${s == criteria.status}">
+                </option>
+              </select>
+            </div>
+
+            <!-- Priority -->
+            <div class="col-md-2">
+              <label class="form-label small text-muted">Priority</label>
+              <select name="priority" class="form-select">
+                <option value="">All</option>
+                <option th:each="p : ${priorities}"
+                        th:value="${p}"
+                        th:text="${p}"
+                        th:selected="${p == criteria.priority}">
+                </option>
+              </select>
+            </div>
+
+            <!-- Assigned To -->
+            <div class="col-md-2" sec:authorize="hasAuthority('FEEDBACK_UPDATE')">
+              <label for="assignedTo" class="form-label small text-muted">Assigned To</label>
+              <select id="assignedTo" name="assignedTo" class="form-select">
+                <option value="">Anyone</option>
+                <option th:each="u : ${assignableUsers}"
+                        th:value="${u.id}"
+                        th:text="${u.username}"
+                        th:selected="${u.id == (criteria.assignedTo != null ? criteria.assignedTo.id : null)}">
+                </option>
+              </select>
+            </div>
+
+            <!-- From -->
+            <div class="col-md-2">
+              <label class="form-label small text-muted">From</label>
+              <input type="date" name="dateFrom"
+                     class="form-control"
+                     th:value="${dateFrom}">
+            </div>
+
+            <!-- To -->
+            <div class="col-md-2">
+              <label class="form-label small text-muted">To</label>
+              <input type="date" name="dateTo"
+                     class="form-control"
+                     th:value="${dateTo}">
+            </div>
+
+            <!-- Page Size -->
+            <div class="col-md-2">
+              <label class="form-label small text-muted">Page size</label>
+              <select name="size" class="form-select">
+                <option th:selected="${size == 10}">10</option>
+                <option th:selected="${size == 20}">20</option>
+                <option th:selected="${size == 50}">50</option>
+              </select>
+            </div>
+
+            <!-- Actions -->
+            <div class="col-md-3 d-flex gap-2">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search me-1"></i> Apply
+              </button>
+              <a th:href="@{/feedback/list}" class="btn btn-outline-secondary w-100">
+                Reset
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Assigned To</th>
+            <th>Contact</th>
+            <th>Priority</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:each="f : ${feedbackPage.content}"
+              style="cursor:pointer;"
+              th:onclick="'window.location.href=\'' +
+                  (${canManage} ? @{/feedback/{id}/manage(id=${f.id})} : @{/feedback/{id}(id=${f.id})})
+                  + '\';'">
+            <td class="fw-semibold" th:text="${f.id}"></td>
+            <td th:text="${#temporals.format(f.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${f.name}"></td>
+            <td th:text="${f.email}"></td>
+            <td>
+              <span class="d-inline-block text-truncate"
+                    style="max-width: 200px;"
+                    th:title="${f.message}"
+                    th:text="${f.message}">
+              </span>
+            </td>
+            <td th:text="${f.assignedTo != null ? f.assignedTo.username : '—'}"></td>
+            <td th:text="${f.contactType}"></td>
+            <td>
+              <span class="badge"
+                    th:classappend="${f.priority.name() == 'CRITICAL'} ? 'bg-danger' :
+                                    (${f.priority.name() == 'HIGH'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                    th:text="${f.priority}">
+              </span>
+            </td>
+            <td>
+              <span class="badge"
+                    th:classappend="${f.status.name() == 'OPEN'} ? 'bg-success' :
+                                    (${f.status.name() == 'IN_PROGRESS'} ? 'bg-warning text-dark' :
+                                    (${f.status.name() == 'CLOSED'} ? 'bg-secondary' : ''))"
+                    th:text="${f.status}">
+              </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage==0} ? 'disabled'">
+          <a class="page-link" th:href="@{/feedback/list(page=${currentPage-1})}">Previous</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(0,totalPages-1)}" th:classappend="${i==currentPage} ? 'active'">
+          <a class="page-link" th:href="@{/feedback/list(page=${i})}" th:text="${i+1}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage+1==totalPages} ? 'disabled'">
+          <a class="page-link" th:href="@{/feedback/list(page=${currentPage+1})}">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</section>
+</html>
