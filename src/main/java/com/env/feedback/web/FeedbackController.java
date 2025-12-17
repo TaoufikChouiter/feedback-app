@@ -11,13 +11,17 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -59,7 +63,7 @@ public class FeedbackController {
     @GetMapping("/feedback/{id}")
     @PreAuthorize("hasAuthority(@permissions.FEEDBACK_READ_ALL()) or @feedbackSecurity.isAssignedTo(#id) or @feedbackSecurity.isOwner(#id)")
     public String get(Model model, @PathVariable Long id) {
-        Feedback feedback = service.getFeedback(id);
+        Feedback feedback = service.getFeedback(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         model.addAttribute("feedback", feedback);
         model.addAttribute("contactTypes", Feedback.ContactType.values());
@@ -70,7 +74,7 @@ public class FeedbackController {
     @GetMapping("/feedback/{id}/manage")
     @PreAuthorize("hasAuthority(@permissions.FEEDBACK_READ_ALL()) or @feedbackSecurity.isAssignedTo(#id) or @feedbackSecurity.isOwner(#id)")
     public String manageFeedback(@PathVariable Long id, Model model) {
-        Feedback feedback = service.getFeedback(id);
+        Feedback feedback = service.getFeedback(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         model.addAttribute("feedback", feedback);
         model.addAttribute("contactTypes", Feedback.ContactType.values());
@@ -89,7 +93,8 @@ public class FeedbackController {
             BindingResult bindingResult,
             Model model) {
 
-        Feedback feedback = service.getFeedback(id);
+        Feedback feedback = service.getFeedback(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         feedback.setStatus(feedbackForm.getStatus());
         feedback.setPriority(feedbackForm.getPriority());
         feedback.setAssignedTo(feedbackForm.getAssignedTo());

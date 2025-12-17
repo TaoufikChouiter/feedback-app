@@ -15,12 +15,10 @@ import java.util.List;
 
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long>, JpaSpecificationExecutor<Feedback> {
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END " +
-            "FROM Feedback f WHERE f.id = :feedbackId AND f.createdBy.id = :userId")
+    @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM Feedback f WHERE f.id = :feedbackId AND f.createdBy.id = :userId) THEN true ELSE false END")
     boolean isOwner(@Param("feedbackId") Long feedbackId, @Param("userId") Long userId);
 
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END " +
-            "FROM Feedback f WHERE f.id = :feedbackId AND f.assignedTo.id = :userId")
+    @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM Feedback f WHERE f.id = :feedbackId AND f.assignedTo.id = :userId) THEN true ELSE false END")
     boolean isAssignedTo(@Param("feedbackId") Long feedbackId, @Param("userId") Long userId);
 
     long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);

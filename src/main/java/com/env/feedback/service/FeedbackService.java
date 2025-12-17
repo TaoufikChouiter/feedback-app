@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,8 +32,8 @@ public class FeedbackService {
     }
 
     @PreAuthorize("hasAuthority(@permissions.FEEDBACK_READ_ALL()) or @feedbackSecurity.isAssignedTo(#id) or @feedbackSecurity.isOwner(#id)")
-    public Feedback getFeedback(Long id) {
-        return repo.findById(id).orElse(null);
+    public Optional<Feedback> getFeedback(Long id) {
+        return repo.findById(id);
     }
 
     public void create(Feedback feedback) {
@@ -60,7 +61,9 @@ public class FeedbackService {
     @PreAuthorize("hasAuthority(@permissions.FEEDBACK_READ_ALL()) or hasAuthority(@permissions.FEEDBACK_READ())")
     public Page<Feedback> searchFeedback(FeedbackSearchCriteria criteria, Pageable pageable) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+        if (auth == null || !(auth.getPrincipal() instanceof UserPrincipal user)) {
+            throw new AccessDeniedException("Unauthorized");
+        }
 
         Specification<Feedback> spec = FeedbackSpecifications.ownerOrAssigned(user)
                 .and(FeedbackSpecifications.hasContactType(criteria.getContactType()))

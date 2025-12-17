@@ -38,10 +38,9 @@ public class SecurityConfig {
                                 "/feedback",
                                 "/feedback/thanks",
                                 "/user/login",
-                                "/user/change-password",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**"
+                                "/fonts/**"
                         ).permitAll()
 
                         // Authenticated endpoints

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,14 +42,5 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
                     .build();
             return userRepository.save(admin);
         });
-
-        System.out.printf("""
-                ===================================================
-                ADMIN USER CREATED
-                Username: %s
-                Password: %s
-                PLEASE CHANGE THIS PASSWORD
-                ===================================================
-                %n""", username, password);
     }
 }
