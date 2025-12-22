@@ -1,10 +1,11 @@
 package com.env.feedback.service;
 
-import com.env.feedback.dto.FeedbackSearchCriteria;
+import com.env.feedback.audit.Auditable;
+import com.env.feedback.web.dto.FeedbackSearchCriteria;
 import com.env.feedback.model.Feedback;
 import com.env.feedback.repository.FeedbackRepository;
 import com.env.feedback.repository.FeedbackSpecifications;
-import com.env.feedback.security.UserPrincipal;
+import com.env.feedback.security.principal.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class FeedbackService {
         return repo.findById(id);
     }
 
+    @Auditable(action = "Create feedback")
     public void create(Feedback feedback) {
         logger.info("Creating feedback of type : {}", feedback.getContactType());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,6 +51,7 @@ public class FeedbackService {
     }
 
     @PreAuthorize("hasAuthority(@permissions.FEEDBACK_UPDATE())")
+    @Auditable(action = "Update feedback")
     public void update(Feedback feedback) {
         logger.info("Updating feedback with status : {}", feedback.getStatus());
         if(feedback.getStatus().equals(Feedback.FeedbackStatus.CLOSED)){

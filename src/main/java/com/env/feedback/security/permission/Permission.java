@@ -1,4 +1,4 @@
-package com.env.feedback.security;
+package com.env.feedback.security.permission;
 
 public enum Permission {
     // Feedback

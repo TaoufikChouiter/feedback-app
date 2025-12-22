@@ -1,6 +1,7 @@
-package com.env.feedback.security;
+package com.env.feedback.security.config;
 
 import com.env.feedback.repository.FeedbackRepository;
+import com.env.feedback.security.principal.UserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

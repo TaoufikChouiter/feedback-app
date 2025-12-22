@@ -1,8 +1,8 @@
-package com.env.feedback.security;
+package com.env.feedback.security.permission;
 
 import java.util.Set;
 
-import static com.env.feedback.security.Permission.*;
+import static com.env.feedback.security.permission.Permission.*;
 
 public enum Role {
     ADMIN(Set.of(

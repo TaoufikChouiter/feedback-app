@@ -1,7 +1,7 @@
 package com.env.feedback.repository;
 
 import com.env.feedback.model.User;
-import com.env.feedback.security.Role;
+import com.env.feedback.security.permission.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

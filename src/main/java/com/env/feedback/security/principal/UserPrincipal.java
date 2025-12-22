@@ -1,7 +1,9 @@
-package com.env.feedback.security;
+package com.env.feedback.security.principal;
 
 
 import com.env.feedback.model.User;
+import com.env.feedback.security.permission.Permission;
+import com.env.feedback.security.permission.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

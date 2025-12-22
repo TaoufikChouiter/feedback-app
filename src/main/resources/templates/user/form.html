@@ -26,12 +26,11 @@
                 </div>
 
                 <div class="card-body">
-                    <form th:action="${editMode}
-                            ? @{/user/{id}/update(id=${user.id})}
-                            : @{/user}"
-                          th:object="${user}"
+                    <form th:action="@{${formAction}}"
+                          th:object="${userDto}"
                           method="post">
 
+                        <!-- USERNAME -->
                         <div class="mb-3">
                             <label class="form-label">Username</label>
                             <input th:field="*{username}"
@@ -39,8 +38,13 @@
                                    th:readonly="${editMode}"
                                    th:disabled="${editMode}"
                                    required>
+
+                            <div class="text-danger mt-1"
+                                 th:if="${#fields.hasErrors('username')}"
+                                 th:errors="*{username}"></div>
                         </div>
 
+                        <!-- EMAIL -->
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email"
@@ -48,11 +52,16 @@
                                    class="form-control"
                                    maxlength="100"
                                    required/>
+
+                            <div class="text-danger mt-1"
+                                 th:if="${#fields.hasErrors('email')}"
+                                 th:errors="*{email}"></div>
                         </div>
 
-                        <!-- Roles -->
+                        <!-- ROLE -->
                         <div class="mb-3">
                             <label class="form-label">Role</label>
+
                             <select th:field="*{role}"
                                     class="form-select"
                                     sec:authorize="hasAuthority('USER_UPDATE_ALL')">
@@ -67,8 +76,13 @@
                                    th:value="*{role}"
                                    sec:authorize="!hasAuthority('USER_UPDATE_ALL')"
                                    disabled>
+
+                            <div class="text-danger mt-1"
+                                 th:if="${#fields.hasErrors('role')}"
+                                 th:errors="*{role}"></div>
                         </div>
 
+                        <!-- ENABLED -->
                         <div class="form-check form-switch mb-3">
                             <input class="form-check-input"
                                    type="checkbox"
@@ -76,14 +90,20 @@
                             <label class="form-check-label">
                                 Account enabled
                             </label>
+
+                            <div class="text-danger mt-1"
+                                 th:if="${#fields.hasErrors('enabled')}"
+                                 th:errors="*{enabled}"></div>
                         </div>
 
-                        <!-- Actions -->
+                        <!-- ACTIONS -->
                         <div class="d-flex justify-content-end gap-2 mt-4">
-                            <a th:href="@{/user/list}" class="btn btn-outline-secondary" sec:authorize="hasAuthority('USER_UPDATE_ALL')">
+                            <a th:href="@{/user/list}" class="btn btn-outline-secondary"
+                               sec:authorize="hasAuthority('USER_UPDATE_ALL')">
                                 Cancel
                             </a>
-                            <a th:href="@{/}" class="btn btn-outline-secondary" sec:authorize="!hasAuthority('USER_UPDATE_ALL')">
+                            <a th:href="@{/}" class="btn btn-outline-secondary"
+                               sec:authorize="!hasAuthority('USER_UPDATE_ALL')">
                                 Cancel
                             </a>
 
@@ -92,9 +112,11 @@
                                 <span th:text="${editMode} ? 'Save changes' : 'Create user'"></span>
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </section>

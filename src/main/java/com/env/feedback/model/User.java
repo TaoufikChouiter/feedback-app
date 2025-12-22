@@ -1,33 +1,44 @@
 package com.env.feedback.model;
 
-import com.env.feedback.security.Permission;
-import com.env.feedback.security.Role;
+import com.env.feedback.audit.AuditLoggable;
+import com.env.feedback.security.permission.Permission;
+import com.env.feedback.security.permission.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "app_user")
-public class User {
+public class User implements AuditLoggable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @Size(max=100)
+    @NotBlank(message = "Username is required")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "Password is required")
     private String password; //Encrypted (BCrypt)
 
     @Column(unique = true, nullable = false)
+    @Email(message = "Email must be valid")
+    @Size(max = 100, message = "Email cannot exceed 100 characters")
     private String email;
 
     @Column(nullable = false)
     private boolean enabled = true;
 
     @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     private boolean passwordChangeRequired = true;
 
@@ -95,6 +106,17 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public String toAuditString() {
+        return "User{" +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", enabled=" + enabled +
+                ", role=" + role +
+                '}';
+    }
+
+
     public static final class Builder {
 
         private String username;
@@ -138,19 +160,6 @@ public class User {
         }
 
         public User build() {
-            if (username == null || username.isBlank()) {
-                throw new IllegalStateException("Username must be provided");
-            }
-            if (password == null || password.isBlank()) {
-                throw new IllegalStateException("Password must be provided");
-            }
-            if (email == null || email.isBlank()) {
-                throw new IllegalStateException("Email must be provided");
-            }
-            if (role == null) {
-                throw new IllegalStateException("Role must be provided");
-            }
-
             User user = new User();
             user.username = this.username;
             user.password = this.password;
@@ -161,4 +170,5 @@ public class User {
             return user;
         }
     }
+
 }

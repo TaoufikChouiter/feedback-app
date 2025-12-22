@@ -2,8 +2,7 @@ package com.env.feedback.config;
 
 import com.env.feedback.model.User;
 import com.env.feedback.repository.UserRepository;
-import com.env.feedback.security.Role;
-import jakarta.annotation.PostConstruct;
+import com.env.feedback.security.permission.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;

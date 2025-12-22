@@ -1,4 +1,4 @@
-package com.env.feedback.dto;
+package com.env.feedback.web.dto;
 
 import com.env.feedback.model.Feedback;
 import com.env.feedback.model.User;

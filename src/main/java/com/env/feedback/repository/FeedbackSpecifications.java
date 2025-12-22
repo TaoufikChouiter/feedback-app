@@ -2,8 +2,8 @@ package com.env.feedback.repository;
 
 import com.env.feedback.model.Feedback;
 import com.env.feedback.model.User;
-import com.env.feedback.security.Permission;
-import com.env.feedback.security.UserPrincipal;
+import com.env.feedback.security.permission.Permission;
+import com.env.feedback.security.principal.UserPrincipal;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.OffsetDateTime;
 

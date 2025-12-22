@@ -1,7 +1,6 @@
-package com.env.feedback;
+package com.env.feedback.repository;
 
 import com.env.feedback.model.Feedback;
-import com.env.feedback.repository.FeedbackRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

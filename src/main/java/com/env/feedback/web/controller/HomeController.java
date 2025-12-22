@@ -1,7 +1,7 @@
-package com.env.feedback.web;
+package com.env.feedback.web.controller;
 
-import com.env.feedback.security.Permission;
-import com.env.feedback.security.UserPrincipal;
+import com.env.feedback.security.permission.Permission;
+import com.env.feedback.security.principal.UserPrincipal;
 import com.env.feedback.service.FeedbackMetricsService;
 import com.env.feedback.service.FeedbackService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,10 +1,9 @@
-package com.env.feedback.web;
+package com.env.feedback.web.controller;
 
-import com.env.feedback.dto.FeedbackSearchCriteria;
+import com.env.feedback.web.dto.FeedbackSearchCriteria;
 import com.env.feedback.model.Feedback;
-import com.env.feedback.model.User;
-import com.env.feedback.security.Permission;
-import com.env.feedback.security.UserPrincipal;
+import com.env.feedback.security.permission.Permission;
+import com.env.feedback.security.principal.UserPrincipal;
 import com.env.feedback.service.FeedbackService;
 import com.env.feedback.service.UserService;
 import jakarta.validation.Valid;
@@ -12,17 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class FeedbackController {
@@ -93,13 +88,6 @@ public class FeedbackController {
             BindingResult bindingResult,
             Model model) {
 
-        Feedback feedback = service.getFeedback(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        feedback.setStatus(feedbackForm.getStatus());
-        feedback.setPriority(feedbackForm.getPriority());
-        feedback.setAssignedTo(feedbackForm.getAssignedTo());
-        feedback.setNote(feedbackForm.getNote());
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("statusOptions", Feedback.FeedbackStatus.values());
             model.addAttribute("priorityOptions", Feedback.FeedbackPriority.values());
@@ -107,9 +95,16 @@ public class FeedbackController {
             return "feedback/manage";
         }
 
+        Feedback feedback = service.getFeedback(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        feedback.setStatus(feedbackForm.getStatus());
+        feedback.setPriority(feedbackForm.getPriority());
+        feedback.setAssignedTo(feedbackForm.getAssignedTo());
+        feedback.setNote(feedbackForm.getNote());
+
         service.update(feedback);
 
-        return "redirect:/feedback/list"; // or wherever you want
+        return "redirect:/feedback/list";
     }
 
     @GetMapping("/feedback/list")

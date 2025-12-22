@@ -1,5 +1,6 @@
-package com.env.feedback.security;
+package com.env.feedback.security.auth;
 
+import com.env.feedback.security.principal.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

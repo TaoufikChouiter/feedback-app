@@ -1,5 +1,6 @@
 package com.env.feedback.model;
 
+import com.env.feedback.audit.AuditLoggable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "feedback")
-public class Feedback {
+public class Feedback implements AuditLoggable {
 
     public enum FeedbackStatus { OPEN, IN_PROGRESS, CLOSED }
     public enum FeedbackPriority { LOW, MEDIUM, HIGH, CRITICAL }
@@ -21,6 +22,7 @@ public class Feedback {
     private String name;
 
     @Size(max=100)
+    @Email
     private String email;
 
     @NotNull
@@ -68,6 +70,20 @@ public class Feedback {
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+
+    @Override
+    public String toAuditString() {
+        return "Feedback{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", contactType=" + contactType +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", note='" + note + '\'' +
+                ", assignedTo=" + assignedTo +
+                ", message='" + message + '\'' +
+                '}';
+    }
 
     public FeedbackStatus getStatus() {
         return status;

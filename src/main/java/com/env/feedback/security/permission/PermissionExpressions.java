@@ -1,4 +1,4 @@
-package com.env.feedback.security;
+package com.env.feedback.security.permission;
 
 import org.springframework.stereotype.Component;
 

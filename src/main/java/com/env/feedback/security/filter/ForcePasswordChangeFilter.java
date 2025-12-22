@@ -1,5 +1,6 @@
-package com.env.feedback.security;
+package com.env.feedback.security.filter;
 
+import com.env.feedback.security.principal.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

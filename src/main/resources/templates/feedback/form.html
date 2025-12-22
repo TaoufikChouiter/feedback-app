@@ -11,39 +11,84 @@
         <div class="card-header bg-primary text-white">
           <h3 class="mb-0">Send Us Your Feedback</h3>
         </div>
+
         <div class="card-body">
+
           <!-- Feedback form -->
           <form th:action="@{/feedback}" th:object="${feedback}" method="post">
+
+            <!-- NAME -->
             <div class="mb-3">
               <label class="form-label">Name (optional)</label>
-              <input th:field="*{name}" class="form-control" placeholder="Your name" maxlength="100"/>
+              <input th:field="*{name}"
+                     class="form-control"
+                     placeholder="Your name"
+                     maxlength="100"/>
+
+              <div class="text-danger mt-1"
+                   th:if="${#fields.hasErrors('name')}"
+                   th:errors="*{name}"></div>
             </div>
 
+            <!-- EMAIL -->
             <div class="mb-3">
               <label class="form-label">Email (optional)</label>
-              <input type="email" th:field="*{email}" class="form-control" placeholder="your@email.com" maxlength="100"/>
+              <input type="email"
+                     th:field="*{email}"
+                     class="form-control"
+                     placeholder="your@email.com"
+                     maxlength="100"/>
+
+              <div class="text-danger mt-1"
+                   th:if="${#fields.hasErrors('email')}"
+                   th:errors="*{email}"></div>
             </div>
 
+            <!-- CONTACT TYPE -->
             <div class="mb-3">
               <label class="form-label">Contact type *</label>
-              <select th:field="*{contactType}" class="form-select" required>
-                <option th:each="c : ${contactTypes}" th:value="${c}" th:text="${c}"></option>
+              <select th:field="*{contactType}"
+                      class="form-select"
+                      required>
+                <option th:each="c : ${contactTypes}"
+                        th:value="${c}"
+                        th:text="${c}"></option>
               </select>
+
+              <div class="text-danger mt-1"
+                   th:if="${#fields.hasErrors('contactType')}"
+                   th:errors="*{contactType}"></div>
             </div>
 
+            <!-- MESSAGE -->
             <div class="mb-3">
               <label class="form-label">Message *</label>
-              <textarea th:field="*{message}" class="form-control" rows="6" placeholder="Your message here..." maxlength="1000" required></textarea>
+              <textarea th:field="*{message}"
+                        class="form-control"
+                        rows="6"
+                        placeholder="Your message here..."
+                        maxlength="1000"
+                        required></textarea>
+
+              <div class="text-danger mt-1"
+                   th:if="${#fields.hasErrors('message')}"
+                   th:errors="*{message}"></div>
             </div>
 
+            <!-- SUBMIT -->
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-lg">Send Feedback</button>
+              <button type="submit" class="btn btn-primary btn-lg">
+                Send Feedback
+              </button>
             </div>
+
           </form>
         </div>
+
       </div>
     </div>
   </div>
 </section>
+
 </body>
 </html>

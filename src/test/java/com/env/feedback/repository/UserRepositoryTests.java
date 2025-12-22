@@ -1,16 +1,11 @@
-package com.env.feedback;
+package com.env.feedback.repository;
 
-import com.env.feedback.model.Feedback;
 import com.env.feedback.model.User;
-import com.env.feedback.repository.FeedbackRepository;
-import com.env.feedback.repository.UserRepository;
-import com.env.feedback.security.Role;
+import com.env.feedback.security.permission.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
